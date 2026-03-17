@@ -1,0 +1,46 @@
+name: Deploy to EKS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::955030484275:role/github-actions-role
+        aws-region: us-east-1
+
+    - name: Login to ECR
+      run: |
+        aws ecr get-login-password --region us-east-1 \
+        | docker login --username AWS --password-stdin 955030484275.dkr.ecr.us-east-1.amazonaws.com
+
+    - name: Build Docker image
+      run: |
+        docker build -t static-app .
+        docker tag static-app:latest 955030484275.dkr.ecr.us-east-1.amazonaws.com/static-app:latest
+
+    - name: Push to ECR
+      run: |
+        docker push 955030484275.dkr.ecr.us-east-1.amazonaws.com/static-app:latest
+
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --region us-east-1 --name devops-cluster
+
+    - name: Deploy to EKS
+      run: |
+        kubectl rollout restart deployment static-app
