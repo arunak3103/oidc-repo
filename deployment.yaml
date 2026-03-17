@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: static-app
-        image: 955030484275.dkr.ecr.us-east-1.amazonaws.com/static-app:v1
+        image: 955030484275.dkr.ecr.us-east-1.amazonaws.com/static-app:v2
         ports:
         - containerPort: 80
