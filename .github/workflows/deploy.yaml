@@ -43,4 +43,5 @@ jobs:
 
     - name: Deploy to EKS
       run: |
-        kubectl rollout restart deployment static-app
+        kubectl apply -f deployment.yaml
+        kubectl apply -f service.yaml
