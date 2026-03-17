@@ -31,11 +31,11 @@ jobs:
     - name: Build Docker image
       run: |
         docker build -t static-app .
-        docker tag static-app:latest 955030484275.dkr.ecr.us-east-1.amazonaws.com/static-app:v1
+        docker tag static-app:latest 955030484275.dkr.ecr.us-east-1.amazonaws.com/static-app:v2
 
     - name: Push to ECR
       run: |
-        docker push 955030484275.dkr.ecr.us-east-1.amazonaws.com/static-app:v1
+        docker push 955030484275.dkr.ecr.us-east-1.amazonaws.com/static-app:v2
 
     - name: Update kubeconfig
       run: |
